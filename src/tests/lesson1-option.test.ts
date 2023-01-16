@@ -14,7 +14,7 @@ import {
 } from '../lesson1-option'
 
 describe('Option', () => {
-  describe.skip('Horse finding', () => {
+  describe('Horse finding', () => {
     it('newGetHorse', () => {
       expect(newGetHorse('CHAMPION')).toEqual(some(standardHorses[0]))
       expect(newGetHorse('CHOMPION')).toEqual(none())
@@ -34,7 +34,7 @@ describe('Option', () => {
       )
     })
   })
-  describe.skip('Helpers', () => {
+  describe('Helpers', () => {
     it('Some', () => {
       expect(some(1)).toEqual({ type: 'Some', value: 1 })
     })

@@ -14,7 +14,7 @@ import {
 } from '../lesson3-optics'
 
 describe('Lesson 3 - optics', () => {
-  describe.skip('Get', () => {
+  describe('Get', () => {
     it('Gets the status code', () => {
       expect(statusCode).toEqual(201)
     })
@@ -31,7 +31,7 @@ describe('Lesson 3 - optics', () => {
       expect(horseName).toEqual('CHAMPION')
     })
   })
-  describe.skip('Set', () => {
+  describe('Set', () => {
     it('Sets the status code to 400', () => {
       expect(responseWith400StatusCode).toEqual({
         ...sampleResponse,
@@ -69,7 +69,7 @@ describe('Lesson 3 - optics', () => {
       })
     })
   })
-  describe.skip('Modify', () => {
+  describe('Modify', () => {
     it('Happy birthday horse', () => {
       const response = horseBirthday(sampleResponse)
       expect(response).toEqual({

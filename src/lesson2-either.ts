@@ -69,22 +69,44 @@ type StandardHorse = {
 
 // standardise :: Horse -> Either HorseError StandardHorse
 export const standardise = (horse: Horse): Either<HorseError, StandardHorse> =>
-  undefined as any;
+{
+  if (!horse.hasTail) {
+    return left({ type: 'HAS_NO_TAIL' })
+  }
+  if (horse.legs < 4) {
+    return left({ type: 'NOT_ENOUGH_LEGS' })
+  }
+  if (horse.legs > 4) {
+    return left({ type: 'TOO_MANY_LEGS' })
+  }
+  return right({
+    name: horse.name,
+    hasTail: true,
+    legs: 4,
+    type: 'STANDARD_HORSE',
+  })
+}
 
 // map :: (A -> B) -> Either E A -> Either E B
 export const map = <E, A, B>(
   fn: (a: A) => B,
   either: Either<E, A>
-): Either<E, B> => undefined as any;
+): Either<E, B> => either.type === 'Right' ? right(fn(either.value)) : left(either.value)
 
 // bind :: (A -> Either E B) -> Either E A -> Either E B
 export const bind = <E, A, B>(
   fn: (a: A) => Either<E, B>,
   either: Either<E, A>
-): Either<E, B> => undefined as any;
+): Either<E, B> => either.type === 'Right' ? fn(either.value) : left(either.value)
 
 // match :: (E -> B) -> (A -> B) -> Either E A -> B
-export const matchEither = undefined as any;
+export const matchEither = <E,A,B>(
+  leftFn: (e:E) => B,
+  rightFn: (a:A) => B,
+  either: Either<E,A>  
+) : B => {
+  return either.type == 'Left' ? leftFn(either.value) : rightFn(either.value)
+}
 
 const showError = (err: HorseError): string => {
   switch (err.type) {
@@ -103,4 +125,18 @@ const showError = (err: HorseError): string => {
 // result into a sensible string
 
 // horseFinder :: String -> String
-export const horseFinder = undefined as any;
+export const horseFinder = (name: string): string => {
+  const horse = getHorse(name)
+
+  const tidyHorse = horse.type === 'Right' ? tidyHorseName(horse.value) : horse.value
+  const standardHorse = tidyHorse.type === 'HORSE' ? standardise(tidyHorse) : tidyHorse
+  if (standardHorse.type === 'Left') {
+    return showError(standardHorse.value)
+  } 
+  if (standardHorse.type === 'Right') {
+    return `What a good horse named ${standardHorse.value.name}`
+  }
+  else {
+    return `The horse ${name} cannot be found`
+  }
+}

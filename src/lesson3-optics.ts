@@ -3,7 +3,12 @@ import { Lens } from "monocle-ts";
 const statusCodeL = Lens.fromProp<Response>()("statusCode");
 const dataL = Lens.fromProp<Response>()("data");
 
-// const timestampL = dataL.compose(Lens.fromProp<Data>()("timestamp"));
+const timestampL = dataL.compose(Lens.fromProp<Data>()("timestamp"));
+const stableL = dataL.compose(Lens.fromProp<Data>()("stable"));
+const horseL = stableL.compose(Lens.fromProp<Stable>()("horse"));
+const hastailL = horseL.compose(Lens.fromProp<Horse>()("hasTail"));
+const numberoflegsL = horseL.compose(Lens.fromProp<Horse>()("numberOfLegs"));
+const ageL = horseL.compose(Lens.fromProp<Horse>()("age"));
 
 export type Horse = {
   name: string;
@@ -59,32 +64,33 @@ export const sampleResponse: Response = {
 export const statusCode = statusCodeL.get(sampleResponse);
 
 // timestamp: number
-export const timestamp = undefined as any;
+export const timestamp = timestampL.get(sampleResponse);
 
 // postcode :: string
-export const postcode = undefined as any;
+export const postcode = stableL.get(sampleResponse).postcode;
 
 // horseLegs :: number
-export const horseLegs = undefined as any;
+export const horseLegs = horseL.get(sampleResponse).numberOfLegs;
 
 // horseName :: string
-export const horseName = undefined as any;
+export const horseName = horseL.get(sampleResponse).name;
 
 // setters
 
 // responseWith400StatusCode :: Response
-export const responseWith400StatusCode = undefined as any;
+export const responseWith400StatusCode = statusCodeL.set(400)(sampleResponse);
 
 // responseWithRemovedTail :: Response
-export const responseWithRemovedTail = undefined as any;
+export const responseWithRemovedTail = hastailL.set(false)(sampleResponse);
 
 // responseWithAdditionalLeg :: Response
-export const responseWithAdditionalLeg = undefined as any;
+export const responseWithAdditionalLeg = numberoflegsL.set(4)(sampleResponse);
 
 // over
 
 // horseBirthday :: Response -> Response
-export const horseBirthday = undefined as any;
+export const horseBirthday = ageL.modify(a => a + 1);
 
 // mapHorse :: (Horse -> Horse) -> Response -> Response
-export const mapHorse = undefined as any;
+export const mapHorse = (f: (a: Horse) => Horse, resp: Response): Response =>
+horseL.modify(f)(resp);

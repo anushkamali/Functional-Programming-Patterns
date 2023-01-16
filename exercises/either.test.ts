@@ -2,7 +2,7 @@ import * as Exercises from './either'
 import * as E from 'fp-ts/Either'
 import * as O from 'fp-ts/Option'
 
-describe.skip('Either exercises', () => {
+describe('Either exercises', () => {
   it('one', () => {
     expect(Exercises.one(E.left(Error('oh no')))).toEqual(null)
     expect(Exercises.one(E.right(1))).toEqual(1)
